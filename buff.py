@@ -40,11 +40,13 @@ class InfiniteTape:
         assert not self.is_zero()
         self._tape[self._cursor] -= 1
 
+    def is_zero(self) -> int:
+        return self.get() == 0 
+
     def get(self) -> int:
         return self._tape[self._cursor]
 
-
-    def get(self,number: int) -> None:
+    def set(self,number: int) -> None:
         self._tape[self._cursor] = number
 
 
