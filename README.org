@@ -1,5 +1,24 @@
 
-# buff
+** buff
 
 buff is an brainfuck intrepreter written in Python.
+
+*** Running the tests 
+
+Run the tests , for sanity checking. 
+
+#+BEGIN_SRC shell
+python test_buff.py
+
+#+END_SRC
+
+*** Running the interpreter
+
+Run the interpreter as:
+
+#+BEGIN_SRC shell
+python repl.py
+
+#+END_SRC
+
 
