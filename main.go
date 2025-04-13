@@ -29,7 +29,7 @@ type InfiniteTape struct {
 	cursor int
 }
 
-func InitInfiniteType() *InfiniteTape {
+func NewInfiniteTape() *InfiniteTape {
 	return &InfiniteTape{
 		tape:   make([]int, 0),
 		cursor: 0,
@@ -70,6 +70,93 @@ func (it *InfiniteTape) Get() int {
 
 func (it *InfiniteTape) Set(number int) {
 	it.tape[it.cursor] = number
+}
+
+//state machine
+//this takes a program and inputs and we can go and step through the program
+// we can just count the brackets and move within the program until we have reached the matching bracket
+
+type StateMachine struct {
+	program string
+	inputs  []int
+	tape    InfiniteTape
+	pc      int
+	outputs []int
+}
+
+func NewStateMachine(program string, inputs []int) *StateMachine {
+	return &StateMachine{
+		program: program,
+		inputs:  inputs,
+		tape:    *NewInfiniteTape(),
+		pc:      0,
+		outputs: make([]int, 0),
+	}
+}
+
+func (sm *StateMachine) Run() []int {
+	for sm.pc != len(sm.program) {
+		sm.Step()
+	}
+	return sm.outputs
+}
+
+func (sm *StateMachine) GotoBracket(forward bool) {
+	currBracket := ""
+	targetBracket := ""
+	increment := 0
+	bracketCounter := 0
+	if forward {
+		currBracket = "["
+		targetBracket = "]"
+		increment = 1
+	} else {
+		currBracket = "]"
+		targetBracket = "["
+		increment = -1
+	}
+
+	for {
+		instruction := sm.program[sm.pc]
+		if string(instruction) == currBracket {
+			bracketCounter += 1
+		} else if string(instruction) == targetBracket {
+			bracketCounter -= 1
+			if bracketCounter == 0 {
+				break
+			}
+		}
+		sm.pc += increment
+	}
+}
+
+func (sm *StateMachine) Step() {
+	instruction := sm.program[sm.pc]
+	switch instruction {
+	case '+':
+		sm.tape.Increment()
+	case '-':
+		sm.tape.Decrement()
+	case '>':
+		sm.tape.Right()
+	case '<':
+		sm.tape.Left()
+	case ',':
+		item, _ := pop(sm.inputs)
+		sm.tape.Set(item)
+		//sm.tape.Set(sm.inputs)
+	case '.':
+		sm.outputs = append(sm.outputs, sm.tape.Get())
+	case '[':
+		if sm.tape.IsZero() {
+			sm.GotoBracket(true)
+		}
+	case ']':
+		if !sm.tape.IsZero() {
+			sm.GotoBracket(false)
+		}
+	}
+	sm.pc += 1
 }
 
 func main() {
