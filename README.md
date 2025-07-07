@@ -1,13 +1,13 @@
 ## buff
 
-buff is an brainfuck interpreter written in Go.
+buff is an brainfuck interpreter written in Python.
 
 ### Running the tests
 
 Run the tests, for sanity checking.
 
 ```shell
-task run test
+pytest
 ```
 
 ### Running the interpreter
@@ -15,11 +15,6 @@ task run test
 Run the interpreter as
 
 ```shell
-task run build
+python main.py
 ```
 
-and then generates the binary at build/ and run now:
-
-```shell
-task run exec
-```
